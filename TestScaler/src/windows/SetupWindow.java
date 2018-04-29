@@ -14,13 +14,18 @@ import classes.FileClass;
 import java.awt.Color;
 import java.awt.Component;
 import javax.swing.UIManager;
+import javax.swing.border.Border;
+
 import java.awt.SystemColor;
 import javax.swing.JButton;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import javax.swing.JPopupMenu;
+import java.io.File;
+
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 
 public class SetupWindow {
 
@@ -38,6 +43,7 @@ public class SetupWindow {
 	private JButton btnDone;
 	private JButton btnSaveLocation;
 	private JButton btnBackupLocation;
+	private Border defaultBorder;
 	/**
 	 * Launch the application.
 	 */
@@ -79,6 +85,12 @@ public class SetupWindow {
 		frmSetupWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		tfFileNameFormat = new JTextField();
+		tfFileNameFormat.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusGained(FocusEvent e) {
+				tfFileNameFormat.setBorder(defaultBorder);
+			}
+		});
 		tfFileNameFormat.setToolTipText("Default: $DF%-$CN%-$TN%");
 		tfFileNameFormat.setColumns(25);
 		frmSetupWindow.getContentPane().setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
@@ -88,8 +100,16 @@ public class SetupWindow {
 		frmSetupWindow.getContentPane().add(lblSaveLocation);
 		
 		tfSaveLocation = new JTextField();
+		tfSaveLocation.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusGained(FocusEvent arg0) {
+				tfSaveLocation.setBorder(defaultBorder);
+			}
+		});
+		
 		tfSaveLocation.setColumns(20);
 		frmSetupWindow.getContentPane().add(tfSaveLocation);
+		defaultBorder = tfSaveLocation.getBorder();
 		
 		btnSaveLocation = new JButton("");
 		btnSaveLocation.addMouseListener(new MouseAdapter() {
@@ -107,6 +127,12 @@ public class SetupWindow {
 		frmSetupWindow.getContentPane().add(lblBackupLocation);
 		
 		tfBackupLocation = new JTextField();
+		tfBackupLocation.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusGained(FocusEvent arg0) {
+				tfBackupLocation.setBorder(defaultBorder);
+			}
+		});
 		tfBackupLocation.setColumns(20);
 		frmSetupWindow.getContentPane().add(tfBackupLocation);
 		
@@ -138,6 +164,12 @@ public class SetupWindow {
 		frmSetupWindow.getContentPane().add(lblDateFormat);
 		
 		tfDateFormat = new JTextField();
+		tfDateFormat.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusGained(FocusEvent e) {
+				tfDateFormat.setBorder(defaultBorder);
+			}
+		});
 		tfDateFormat.setToolTipText("Default: $YYYY%_$MM%_$DD%");
 		tfDateFormat.setColumns(25);
 		frmSetupWindow.getContentPane().add(tfDateFormat);
@@ -158,21 +190,47 @@ public class SetupWindow {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				boolean done = true;
+				//Checks to make sure Date Format is valid
 				if(tfDateFormat.getText().equals("")) {
 					file.setDateFormat("$YYYY%_$MM%_$DD%");
 				} else {
-					file.checkDateFormat("$YYYY%_$MM%_$DD%");
 					String error = file.checkDateFormat(tfDateFormat.getText());
 					if(!error.equals("clear")) {
 						tfDateFormat.setBorder(BorderFactory.createLineBorder(Color.red));
 						tfDateFormat.setToolTipText(error);
+						done = false;
 					}
 					
 				}
+				//Checks to make sure File Name Format is valid
 				if(tfFileNameFormat.getText().equals("")) {
-					file.setDateFormat("$YYYY%_$MM%_$DD%");
+					file.setDateFormat("$DF%-$CN%-$TN%");
 				} else {
-					file.setDateFormat("$YYYY%_$MM%_$DD%");
+					String error = file.checkFileNameFormat(tfFileNameFormat.getText());
+					if(!error.equals("clear")) {
+						tfFileNameFormat.setBorder(BorderFactory.createLineBorder(Color.red));
+						tfFileNameFormat.setToolTipText(error);
+						done = false;
+					}
+				}
+				//Checks to make sure Save Location is a dir
+				File saveLocationCheck = new File(tfSaveLocation.getText());
+				if(saveLocationCheck.isDirectory() == false) {
+					tfSaveLocation.setBorder(BorderFactory.createLineBorder(Color.red));
+					tfSaveLocation.setToolTipText("Not a valid directory.");
+					done = false;
+				}
+				//Checks to make sure Backup Location is a dir
+				File backupLocationCheck = new File(tfBackupLocation.getText());
+				if(backupLocationCheck.isDirectory() == false) {
+					tfBackupLocation.setBorder(BorderFactory.createLineBorder(Color.red));
+					tfBackupLocation.setToolTipText("Not a valid directory.");
+					done = false;
+				}
+				if(done == true) {
+					file.saveSettings(tfDateFormat.getText(), tfFileNameFormat.getText(), saveLocationCheck, backupLocationCheck);
+					frmSetupWindow.setVisible(false);
+					System.exit(0);
 				}
 			}
 		});
