@@ -24,11 +24,11 @@ public class Runner{
 			// Run updater code
 			System.out.println("You need to update");
 		} else {
-			String settingss = "Settings.ini";
+			String settings = "Settings.ini";
 			// System.out.println((chooser.getSelectedFile()).getPath());
 			try {
 				@SuppressWarnings("resource")
-				FileReader checker = new FileReader(settingss);
+				FileReader checker = new FileReader(settings);
 			} catch (FileNotFoundException e) {
 				SetupWindow setup = new SetupWindow();
 				setup.activate();
