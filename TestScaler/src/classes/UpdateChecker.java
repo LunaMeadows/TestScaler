@@ -34,6 +34,6 @@ public class UpdateChecker {
 		in.close();
 
 		// print result
-		return response.toString().indexOf("Version 0.1");
+		return response.toString().indexOf("Version 0.2");
 	}
 }
