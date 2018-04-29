@@ -123,10 +123,10 @@ public class FileClass {
 		File settingsFile = new File(settings);
 		try {
 			FileWriter writer = new FileWriter(settingsFile);
-			writer.write("Date format: " + dateFormat);
-			writer.write("File format: " + fileNameFormat);
-			writer.write("Save Location: " + saveLocation.getAbsolutePath());
-			writer.write("Backup Location: " + backupLocation.getAbsolutePath());
+			writer.write("Date format: " + dateFormat + "\n");
+			writer.write("File format: " + fileNameFormat + "\n");
+			writer.write("Save Location: " + saveLocation.getAbsolutePath() + "\n");
+			writer.write("Backup Location: " + backupLocation.getAbsolutePath() + "\n");
 			writer.close();
 		} catch (IOException e) {
 			try {
