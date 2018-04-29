@@ -3,43 +3,41 @@ package windows;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
-import java.awt.Window.Type;
 import javax.swing.JLabel;
-import java.awt.BorderLayout;
 import javax.swing.JTextField;
 import java.awt.FlowLayout;
-import javax.swing.BoxLayout;
-import java.awt.GridLayout;
-import java.awt.CardLayout;
-import javax.swing.GroupLayout;
-import javax.swing.GroupLayout.Alignment;
-import javax.swing.LayoutStyle.ComponentPlacement;
-import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import org.eclipse.wb.swing.FocusTraversalOnArray;
-import java.awt.Component;
-import javax.swing.JTextPane;
-import javax.swing.JTextArea;
-import javax.swing.UIManager;
+
+import classes.FileClass;
+
 import java.awt.Color;
+import java.awt.Component;
+import javax.swing.UIManager;
 import java.awt.SystemColor;
 import javax.swing.JButton;
+import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import javax.swing.JPopupMenu;
 
 public class SetupWindow {
 
 	private JFrame frmSetupWindow;
-	private JTextField txtFormatCodescnclass;
+	private JTextField tfFileNameFormat;
 	private JLabel lblSaveLocation;
-	private JTextField textField_1;
-	private JLabel label;
-	private JTextField textField_2;
-	private JTextArea txtrFormatCodescnclass;
+	private JTextField tfSaveLocation;
+	private JLabel lblBackupLocation;
+	private JTextField tfBackupLocation;
+	private JLabel lblFormatCodes;
 	private JLabel lblDateFormat;
-	private JTextField textField;
-	private JTextArea txtrFormatCodesddDay;
+	private JTextField tfDateFormat;
+	private JLabel lblDateFormatCodes;
 	private JButton btnResetDefault;
 	private JButton btnDone;
-
+	private JButton btnSaveLocation;
+	private JButton btnBackupLocation;
 	/**
 	 * Launch the application.
 	 */
@@ -62,74 +60,123 @@ public class SetupWindow {
 	public SetupWindow() {
 		initialize();
 	}
+	
+	public void activate() {
+		initialize();
+		frmSetupWindow.setVisible(true);
+	}
 
 	/**
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
+		FileClass file = new FileClass();
 		frmSetupWindow = new JFrame();
 		frmSetupWindow.getContentPane().setBackground(SystemColor.menu);
 		frmSetupWindow.setResizable(false);
 		frmSetupWindow.setTitle("Setup Window");
-		frmSetupWindow.setBounds(100, 100, 317, 229);
+		frmSetupWindow.setBounds(100, 100, 403, 229);
 		frmSetupWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
-		txtFormatCodescnclass = new JTextField();
-		txtFormatCodescnclass.setToolTipText("Format Codes: $CN%-Class Name, $TN%- Test Name, $D%- Date,");
-		txtFormatCodescnclass.setColumns(25);
-		frmSetupWindow.getContentPane().setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+		tfFileNameFormat = new JTextField();
+		tfFileNameFormat.setToolTipText("Default: $DF%-$CN%-$TN%");
+		tfFileNameFormat.setColumns(25);
+		frmSetupWindow.getContentPane().setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
 		
 		lblSaveLocation = new JLabel("Save Location:");
+		lblSaveLocation.setHorizontalAlignment(SwingConstants.LEFT);
 		frmSetupWindow.getContentPane().add(lblSaveLocation);
 		
-		textField_1 = new JTextField();
-		textField_1.setColumns(25);
-		frmSetupWindow.getContentPane().add(textField_1);
+		tfSaveLocation = new JTextField();
+		tfSaveLocation.setColumns(20);
+		frmSetupWindow.getContentPane().add(tfSaveLocation);
 		
-		label = new JLabel("Backup Location:");
-		frmSetupWindow.getContentPane().add(label);
+		btnSaveLocation = new JButton("");
+		btnSaveLocation.addMouseListener(new MouseAdapter() {
+			//Button to open up file selection for save location
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				tfSaveLocation.setText(String.valueOf(file.selectFolder("Select save location").getSelectedFile().getPath()));
+			}
+		});
+		btnSaveLocation.setIcon(new ImageIcon(SetupWindow.class.getResource("/javax/swing/plaf/metal/icons/ocean/directory.gif")));
+		frmSetupWindow.getContentPane().add(btnSaveLocation);
 		
-		textField_2 = new JTextField();
-		textField_2.setColumns(25);
-		frmSetupWindow.getContentPane().add(textField_2);
+		lblBackupLocation = new JLabel("Backup Location:");
+		lblBackupLocation.setHorizontalAlignment(SwingConstants.LEFT);
+		frmSetupWindow.getContentPane().add(lblBackupLocation);
 		
-		JLabel lblTeacherName = new JLabel("File Name Format:");
-		frmSetupWindow.getContentPane().add(lblTeacherName);
-		frmSetupWindow.getContentPane().setFocusTraversalPolicy(new FocusTraversalOnArray(new Component[]{lblTeacherName, txtFormatCodescnclass}));
-		frmSetupWindow.getContentPane().add(txtFormatCodescnclass);
+		tfBackupLocation = new JTextField();
+		tfBackupLocation.setColumns(20);
+		frmSetupWindow.getContentPane().add(tfBackupLocation);
 		
-		txtrFormatCodescnclass = new JTextArea();
-		txtrFormatCodescnclass.setBackground(SystemColor.menu);
-		txtrFormatCodescnclass.setFont(UIManager.getFont("Label.font"));
-		txtrFormatCodescnclass.setColumns(35);
-		txtrFormatCodescnclass.setLineWrap(true);
-		txtrFormatCodescnclass.setTabSize(20);
-		txtrFormatCodescnclass.setEditable(false);
-		txtrFormatCodescnclass.setText("Format Codes: $CN%-Class Name, $TN%- Test Name\r\n$DF%- Date");
-		frmSetupWindow.getContentPane().add(txtrFormatCodescnclass);
+		btnBackupLocation = new JButton("");
+		btnBackupLocation.addMouseListener(new MouseAdapter() {
+			//Button to open up file selection for backup location
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				tfBackupLocation.setText(String.valueOf(file.selectFolder("Select backup location").getSelectedFile().getPath()));
+			}
+		});
+		btnBackupLocation.setIcon(new ImageIcon(SetupWindow.class.getResource("/javax/swing/plaf/metal/icons/ocean/directory.gif")));
+		frmSetupWindow.getContentPane().add(btnBackupLocation);
+		
+		JLabel lblFileNameFormat = new JLabel("File Name Format:");
+		lblFileNameFormat.setHorizontalAlignment(SwingConstants.LEFT);
+		frmSetupWindow.getContentPane().add(lblFileNameFormat);
+		frmSetupWindow.getContentPane().add(tfFileNameFormat);
+		
+		lblFormatCodes = new JLabel();
+		lblFormatCodes.setHorizontalAlignment(SwingConstants.CENTER);
+		lblFormatCodes.setBackground(SystemColor.menu);
+		lblFormatCodes.setFont(UIManager.getFont("Label.font"));
+		lblFormatCodes.setText("Format Codes: $CN%-Class Name, $TN%- Test Name\r\n$DF%- Date");
+		frmSetupWindow.getContentPane().add(lblFormatCodes);
 		
 		lblDateFormat = new JLabel("Date Format:");
+		lblDateFormat.setHorizontalAlignment(SwingConstants.LEFT);
 		frmSetupWindow.getContentPane().add(lblDateFormat);
 		
-		textField = new JTextField();
-		textField.setToolTipText("Format Codes: $CN%-Class Name, $TN%- Test Name, $D%- Date,");
-		textField.setColumns(25);
-		frmSetupWindow.getContentPane().add(textField);
+		tfDateFormat = new JTextField();
+		tfDateFormat.setToolTipText("Default: $YYYY%_$MM%_$DD%");
+		tfDateFormat.setColumns(25);
+		frmSetupWindow.getContentPane().add(tfDateFormat);
 		
-		txtrFormatCodesddDay = new JTextArea();
-		txtrFormatCodesddDay.setText("$DD% - Day, $MM% - Month, $YYYY% - Year");
-		txtrFormatCodesddDay.setTabSize(20);
-		txtrFormatCodesddDay.setLineWrap(true);
-		txtrFormatCodesddDay.setFont(UIManager.getFont("Label.font"));
-		txtrFormatCodesddDay.setEditable(false);
-		txtrFormatCodesddDay.setColumns(28);
-		txtrFormatCodesddDay.setBackground(SystemColor.menu);
-		frmSetupWindow.getContentPane().add(txtrFormatCodesddDay);
+		lblDateFormatCodes = new JLabel();
+		lblDateFormatCodes.setHorizontalAlignment(SwingConstants.CENTER);
+		lblDateFormatCodes.setText("Date Codes: $DD% - Day, $MM% - Month, $YYYY% - Year");
+		lblDateFormatCodes.setFont(UIManager.getFont("Label.font"));
+		lblDateFormatCodes.setBackground(SystemColor.menu);
+		frmSetupWindow.getContentPane().add(lblDateFormatCodes);
 		
 		btnResetDefault = new JButton("Reset Default");
 		frmSetupWindow.getContentPane().add(btnResetDefault);
 		
 		btnDone = new JButton("Done");
+		btnDone.addMouseListener(new MouseAdapter() {
+			//Button to confirm settings for first run
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				boolean done = true;
+				if(tfDateFormat.getText().equals("")) {
+					file.setDateFormat("$YYYY%_$MM%_$DD%");
+				} else {
+					file.checkDateFormat("$YYYY%_$MM%_$DD%");
+					String error = file.checkDateFormat(tfDateFormat.getText());
+					if(!error.equals("clear")) {
+						tfDateFormat.setBorder(BorderFactory.createLineBorder(Color.red));
+						tfDateFormat.setToolTipText(error);
+					}
+					
+				}
+				if(tfFileNameFormat.getText().equals("")) {
+					file.setDateFormat("$YYYY%_$MM%_$DD%");
+				} else {
+					file.setDateFormat("$YYYY%_$MM%_$DD%");
+				}
+			}
+		});
 		frmSetupWindow.getContentPane().add(btnDone);
+		frmSetupWindow.getContentPane().setFocusTraversalPolicy(new FocusTraversalOnArray(new Component[]{lblFileNameFormat, tfFileNameFormat, lblSaveLocation, tfSaveLocation, btnSaveLocation, lblBackupLocation, tfBackupLocation, btnBackupLocation, lblFormatCodes, lblDateFormat, tfDateFormat, lblDateFormatCodes, btnResetDefault, btnDone}));
 	}
 }
