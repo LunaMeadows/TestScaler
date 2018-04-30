@@ -29,8 +29,10 @@ import java.awt.event.FocusEvent;
 import java.awt.Window.Type;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
-public class SetupWindow {
+public class SettingsWindow {
 	// Instance Variables
 	private JFrame frmSetupWindow;
 	private JTextField tfFileNameFormat;
@@ -55,7 +57,7 @@ public class SetupWindow {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					SetupWindow window = new SetupWindow();
+					SettingsWindow window = new SettingsWindow();
 					window.frmSetupWindow.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -67,7 +69,7 @@ public class SetupWindow {
 	/**
 	 * Create the application.
 	 */
-	public SetupWindow() {
+	public SettingsWindow() {
 		initialize();
 	}
 
@@ -84,16 +86,18 @@ public class SetupWindow {
 	 */
 	private void initialize() {
 		FileClass file = new FileClass();
+		file.readInSettings();
 		frmSetupWindow = new JFrame();
 		frmSetupWindow.addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent arg0) {
-				int confirmation = JOptionPane.showConfirmDialog(null, "This is a required part of setup, closing now can cause many problems and even make the program not work at all. Are you sure you want to close? Doing so will stop the program.");
+				/*int confirmation = JOptionPane.showConfirmDialog(null, "This is a required part of setup, closing now can cause many problems and even make the program not work at all. Are you sure you want to close? Doing so will stop the program.");
 				if(confirmation == JOptionPane.YES_OPTION) {
 					System.exit(0);
 				} else {
 					
-				}
+				}*/
+				frmSetupWindow.dispose();
 			}
 		});
 		frmSetupWindow.getContentPane().setBackground(SystemColor.menu);
@@ -138,7 +142,7 @@ public class SetupWindow {
 			}
 		});
 		btnSaveLocation.setIcon(
-				new ImageIcon(SetupWindow.class.getResource("/javax/swing/plaf/metal/icons/ocean/directory.gif")));
+				new ImageIcon(SettingsWindow.class.getResource("/javax/swing/plaf/metal/icons/ocean/directory.gif")));
 		frmSetupWindow.getContentPane().add(btnSaveLocation);
 		lblBackupLocation = new JLabel("Backup Location:");
 		lblBackupLocation.setHorizontalAlignment(SwingConstants.LEFT);
@@ -166,7 +170,7 @@ public class SetupWindow {
 			}
 		});
 		btnBackupLocation.setIcon(
-				new ImageIcon(SetupWindow.class.getResource("/javax/swing/plaf/metal/icons/ocean/directory.gif")));
+				new ImageIcon(SettingsWindow.class.getResource("/javax/swing/plaf/metal/icons/ocean/directory.gif")));
 		frmSetupWindow.getContentPane().add(btnBackupLocation);
 
 		JLabel lblFileNameFormat = new JLabel("File Name Format:");
@@ -216,6 +220,10 @@ public class SetupWindow {
 		frmSetupWindow.getContentPane().add(btnResetDefault);
 
 		btnDone = new JButton("Done");
+		btnDone.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+			}
+		});
 		btnDone.addMouseListener(new MouseAdapter() {
 			// Button to confirm settings for first run
 			@Override
@@ -223,7 +231,7 @@ public class SetupWindow {
 				boolean done = true;
 				// Checks to make sure Date Format is valid
 				if (tfDateFormat.getText().equals("")) {
-					tfDateFormat.setText("$YYYY%_$MM%_$DD%");
+					tfDateFormat.setText(file.getDateFormat());
 				} else {
 					String error = file.checkDateFormat(tfDateFormat.getText());
 					if (!error.equals("clear")) {
@@ -236,7 +244,7 @@ public class SetupWindow {
 
 				// Checks to make sure File Name Format is valid
 				if (tfFileNameFormat.getText().equals("")) {
-					tfFileNameFormat.setText("$DF%-$CN%-$TN%");
+					tfFileNameFormat.setText(file.getFileNameFormat());
 				} else {
 					String error = file.checkFileNameFormat(tfFileNameFormat.getText());
 					if (!error.equals("clear")) {
@@ -249,7 +257,7 @@ public class SetupWindow {
 				// Checks to make sure Save Location is a dir
 				File saveLocationCheck = new File(tfSaveLocation.getText());
 				if (tfSaveLocation.getText().equals("")) {
-					saveLocationCheck = new File("");
+					saveLocationCheck = file.getSaveLocation();
 				} else {
 					saveLocationCheck = new File(tfSaveLocation.getText());
 					if (saveLocationCheck.isDirectory() == false) {
@@ -262,7 +270,7 @@ public class SetupWindow {
 				// Checks to make sure Backup Location is a dir
 				File backupLocationCheck;
 				if (tfBackupLocation.getText().equals("")) {
-					backupLocationCheck = new File("");
+					backupLocationCheck = file.getBackupLocation();
 				} else {
 					backupLocationCheck = new File(tfBackupLocation.getText());
 					if (backupLocationCheck.isDirectory() == false) {

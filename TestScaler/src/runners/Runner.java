@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 
 import classes.UpdateChecker;
+import windows.MainWindow;
 import windows.SetupWindow;
 
 /**
@@ -17,21 +18,16 @@ public class Runner {
 
 	@SuppressWarnings("unused")
 	public static void main(String[] args) throws Exception {
-		/*
-		 * JFileChooser chooser = new JFileChooser(); int hold =
-		 * chooser.showOpenDialog(null);
-		 */
-		String settings = "settings.ini";
-		File file = new File(settings);
-		// System.out.println((chooser.getSelectedFile()).getPath());
-		UpdateChecker.sendGet();
-		try {
-			@SuppressWarnings("resource")
-			FileReader checker = new FileReader(file);
-		} catch (FileNotFoundException e) {
+		File file = new File("settings.ini");
+		UpdateChecker.updateCheckStandalone();
+		if(!file.exists()) {
 			SetupWindow setup = new SetupWindow();
 			setup.activate();
+			while(!file.exists()) {
+			}
 		}
+		MainWindow main = new MainWindow();
+		main.activate();
 	}
 
 }
