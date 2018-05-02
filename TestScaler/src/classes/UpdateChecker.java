@@ -16,7 +16,7 @@ import javax.swing.JOptionPane;
 public class UpdateChecker {
 	//Instance Variables
 	private final static String USER_AGENT = "Mozilla/5.0";
-	private final static String VERSION = "Version 0.3";
+	private final static String VERSION = "Version 0.4";
 	
 	//Methods
 	public static void updateCheckStandalone() throws Exception {
@@ -71,6 +71,6 @@ public class UpdateChecker {
 		}
 		in.close();
 		
-		return response.toString().indexOf("VERSION");
+		return response.toString().indexOf(VERSION);
 	}
 }

@@ -1,10 +1,9 @@
-package windows;
+package mainWindows;
 
 //Imports
 import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import java.awt.FlowLayout;
 import javax.swing.SwingConstants;
@@ -12,8 +11,6 @@ import org.eclipse.wb.swing.FocusTraversalOnArray;
 import classes.FileClass;
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Desktop;
-
 import javax.swing.UIManager;
 import javax.swing.border.Border;
 import java.awt.SystemColor;
@@ -23,10 +20,8 @@ import javax.swing.ImageIcon;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
-import java.net.URI;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
-import java.awt.Window.Type;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.ActionListener;

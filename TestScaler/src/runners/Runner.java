@@ -1,12 +1,10 @@
 package runners;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 
 import classes.UpdateChecker;
-import windows.MainWindow;
-import windows.SetupWindow;
+import mainWindows.MainWindow;
+import mainWindows.SetupWindow;
 
 /**
  * @author Derrick Bush
@@ -16,7 +14,6 @@ import windows.SetupWindow;
  */
 public class Runner {
 
-	@SuppressWarnings("unused")
 	public static void main(String[] args) throws Exception {
 		File file = new File("settings.ini");
 		UpdateChecker.updateCheckStandalone();
